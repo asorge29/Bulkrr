@@ -2,7 +2,7 @@
 
 Bulkrr, where the 'r's stand for rapid and reliable, is an efficient tool designed to streamline the process of bulk file renaming. Whether you're managing a large collection of files or organizing data for your projects, Bulkrr empowers you with rapid and reliable renaming capabilities.
 
-![Bulkrr Logo](Bulkrr_logo.jpeg)
+![Bulkrr Logo](Bulkrr_Logo.jpeg)
 
 ## Features
 
