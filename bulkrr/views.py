@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
 from PyQt5 import QtGui
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, pyqtSignal
 from .ui.window import Ui_Window
 from .ui.removeDialog import Ui_removeDialog
 from .rename import Renamer
@@ -45,10 +45,17 @@ class Window(QWidget, Ui_Window):
         self.renameFilesButton.setEnabled(False)
         self.prefixEdit.clear()
         self.prefixEdit.setEnabled(False)
+        self.editFileQueueButton.setEnabled(False)
+        self.clearFileQueueButton.setEnabled(False)
+        self.loadFilesButton.setText("Load Files")
+        self.prefixEdit.clear()
 
     def _updateStateWhenFilesLoaded(self):
         self.prefixEdit.setEnabled(True)
         self.prefixEdit.setFocus(True)
+        self.loadFilesButton.setText("Load More Files")
+        self.clearFileQueueButton.setEnabled(True)
+        self.editFileQueueButton.setEnabled(True)
 
     def _updateStateWhenReady(self):
         if self.prefixEdit.text():
@@ -60,6 +67,9 @@ class Window(QWidget, Ui_Window):
     def _updateStateWhileRenaming(self):
         self.loadFilesButton.setEnabled(False)
         self.renameFilesButton.setEnabled(False)
+        self.editFileQueueButton.setEnabled(False)
+        self.clearFileQueueButton.setEnabled(False)
+        self.prefixEdit.setEnabled(False)
     
     def _connectSignalsSlots(self):
         self.loadFilesButton.clicked.connect(self.loadFiles)
@@ -68,6 +78,7 @@ class Window(QWidget, Ui_Window):
         self.prefixEdit.textEdited.connect(self._validatePrefixChars)
         self.prefixEdit.returnPressed.connect(self.renameFiles)
         self.editFileQueueButton.clicked.connect(self._removeItemsWindow)
+        self.clearFileQueueButton.clicked.connect(self._clearFileQueue)
 
     def loadFiles(self):
         self.dstFileList.clear()
@@ -146,9 +157,25 @@ class Window(QWidget, Ui_Window):
     def _removeItemsWindow(self):
         self._removeDialog = RemoveDialog(self._files)
         self._removeDialog.setWindowIcon(QtGui.QIcon("Bulkrr_logo.jpeg"))
+        self._removeDialog.changesSubmitted.connect(self._updateFilesQueue)
         self._removeDialog.show()
 
+    def _updateFilesQueue(self):
+            self._files = self._removeDialog.updatedFiles
+            self._filesCount = len(self._files)
+            self.srcFileList.clear()
+            for file in self._files:
+                self.srcFileList.addItem(str(file))
+
+    def _clearFileQueue(self):
+        self._files.clear()
+        self._filesCount = len(self._files)
+        self.srcFileList.clear()
+        self._updateStateWhenNoFiles()
+
 class RemoveDialog(QWidget, Ui_removeDialog):
+    changesSubmitted = pyqtSignal()
+
     def __init__(self, files: deque = deque()):
         super().__init__()
         self.files = files
@@ -165,6 +192,7 @@ class RemoveDialog(QWidget, Ui_removeDialog):
         self.toRemove = self.fileList.selectedItems()
         for i in self.toRemove:
             self.updatedFiles.remove(Path(i.text()))
+        self.changesSubmitted.emit()
         self.close()
     
     def reject(self):
