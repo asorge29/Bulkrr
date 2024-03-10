@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
 from PyQt5 import QtGui
 from PyQt5.QtCore import QThread
 from .ui.window import Ui_Window
+from .ui.removeDialog import Ui_removeDialog
 from .rename import Renamer
 from pathlib import Path
 from collections import deque
@@ -52,6 +53,7 @@ class Window(QWidget, Ui_Window):
     def _updateStateWhenReady(self):
         if self.prefixEdit.text():
             self.renameFilesButton.setEnabled(True)
+            self.loadFilesButton.setText("Load More Files")
         else:
             self.renameFilesButton.setEnabled(False)
 
@@ -63,6 +65,9 @@ class Window(QWidget, Ui_Window):
         self.loadFilesButton.clicked.connect(self.loadFiles)
         self.renameFilesButton.clicked.connect(self.renameFiles)
         self.prefixEdit.textChanged.connect(self._updateStateWhenReady)
+        self.prefixEdit.textEdited.connect(self._validatePrefixChars)
+        self.prefixEdit.returnPressed.connect(self.renameFiles)
+        self.editFileQueueButton.clicked.connect(self._removeItemsWindow)
 
     def loadFiles(self):
         self.dstFileList.clear()
@@ -117,3 +122,50 @@ class Window(QWidget, Ui_Window):
     def _updateProgressBar(self, fileNumber):
         progressPercent = int(fileNumber / self._filesCount * 100)
         self.progressBar.setValue(progressPercent)
+
+    def _validatePrefixChars(self):
+        prefix = self.prefixEdit.text()
+        invalidCharacters = '"\/:*?"<>|'
+        for i in invalidCharacters:
+            if i in prefix:
+                self._spawnMessageBox(
+                    "Invalid Prefix",
+                    f"The prefix cannot contain the following characters: {invalidCharacters}"
+                )
+                self.prefixEdit.clear()
+                self.prefixEdit.setFocus(True)
+                break
+
+    def _spawnMessageBox(self, title, text):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setWindowTitle(title)
+        msg.setText(text)
+        msg.exec_()
+
+    def _removeItemsWindow(self):
+        self._removeDialog = RemoveDialog(self._files)
+        self._removeDialog.setWindowIcon(QtGui.QIcon("Bulkrr_logo.jpeg"))
+        self._removeDialog.show()
+
+class RemoveDialog(QWidget, Ui_removeDialog):
+    def __init__(self, files: deque = deque()):
+        super().__init__()
+        self.files = files
+        self.toRemove = []
+        self.updatedFiles = files.copy()
+        self._setupUI()
+
+    def _setupUI(self):
+        self.setupUi(self)
+        for file in self.files:
+            self.fileList.addItem(str(file))
+
+    def accept(self):
+        self.toRemove = self.fileList.selectedItems()
+        for i in self.toRemove:
+            self.updatedFiles.remove(Path(i.text()))
+        self.close()
+    
+    def reject(self):
+        self.close()
