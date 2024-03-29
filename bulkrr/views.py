@@ -23,7 +23,7 @@ FILTERS = ";;".join(
         "MP4 Files (*.mp4)",
         "AVI Files (*.avi)",
     )
-)
+) #filters in file picker
 
 class Window(QWidget, Ui_Window):
     def __init__(self):
@@ -82,6 +82,7 @@ class Window(QWidget, Ui_Window):
 
     def loadFiles(self):
         self.dstFileList.clear()
+        #open to home unless another path was previously opened
         if self.dirEdit.text():
             initDir = self.dirEdit.text()
         else:
@@ -95,6 +96,7 @@ class Window(QWidget, Ui_Window):
             self.extensionLabel.setText(fileExtension)
             srcDirName = str(Path(files[0]).parent)
             self.dirEdit.setText(srcDirName)
+            # Add files to queue
             for file in files:
                 self._files.append(Path(file))
                 self.srcFileList.addItem(file)
@@ -106,6 +108,7 @@ class Window(QWidget, Ui_Window):
 
     def _runRenamerThread(self):
         prefix = self.prefixEdit.text()
+        #create thread and move renamer to it
         self._thread = QThread()
         self._renamer = Renamer(
             files=tuple(self._files),
@@ -126,17 +129,20 @@ class Window(QWidget, Ui_Window):
         self._thread.start()
 
     def _updateStateWhenFileRenamed(self, newFile):
+        #update list and deque
         self._files.popleft()
         self.srcFileList.takeItem(0)
         self.dstFileList.addItem(str(newFile))
 
     def _updateProgressBar(self, fileNumber):
+        #update progress bar
         progressPercent = int(fileNumber / self._filesCount * 100)
         self.progressBar.setValue(progressPercent)
 
     def _validatePrefixChars(self):
+        #check for characters that are not allowed in file names
         prefix = self.prefixEdit.text()
-        invalidCharacters = '"\/:*?"<>|'
+        invalidCharacters = '" \ / : * ? " < > |'
         for i in invalidCharacters:
             if i in prefix:
                 self._spawnMessageBox(
@@ -161,19 +167,21 @@ class Window(QWidget, Ui_Window):
         self._removeDialog.show()
 
     def _updateFilesQueue(self):
-            self._files = self._removeDialog.updatedFiles
+            self._files = self._removeDialog.updatedFiles #replace current files list with updated list
             self._filesCount = len(self._files)
             self.srcFileList.clear()
-            for file in self._files:
+            for file in self._files: #update file display list
                 self.srcFileList.addItem(str(file))
 
     def _clearFileQueue(self):
+        #clear file queue and update state
         self._files.clear()
         self._filesCount = len(self._files)
         self.srcFileList.clear()
         self._updateStateWhenNoFiles()
 
-class RemoveDialog(QWidget, Ui_removeDialog):
+class RemoveDialog(QWidget, Ui_removeDialog): #dialog to remove specific files from queue
+    # Define custom signals
     changesSubmitted = pyqtSignal()
 
     def __init__(self, files: deque = deque()):
