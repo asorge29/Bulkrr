@@ -32,7 +32,7 @@ class Window(QWidget, Ui_Window):
         self._filesCount = len(self._files)
         self._setupUI()
         self._connectSignalsSlots()
-        self.setWindowIcon(QtGui.QIcon("_internal\Bulkrr_Logo.jpg"))
+        self.setWindowIcon(QtGui.QIcon("Bulkrr_Logo.jpg"))
 
     def _setupUI(self):
         self.setupUi(self)
