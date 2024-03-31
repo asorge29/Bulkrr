@@ -142,7 +142,7 @@ class Window(QWidget, Ui_Window):
     def _validatePrefixChars(self):
         #check for characters that are not allowed in file names
         prefix = self.prefixEdit.text()
-        invalidCharacters = '" \ / : * ? " < > |'
+        invalidCharacters = '"\/:*?"<>|'
         for i in invalidCharacters:
             if i in prefix:
                 self._spawnMessageBox(
