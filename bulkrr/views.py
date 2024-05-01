@@ -6,6 +6,7 @@ from .ui.removeDialog import Ui_removeDialog
 from .rename import Renamer
 from pathlib import Path
 from collections import deque
+import sys, os
 
 FILTERS = ";;".join(
     (
@@ -32,7 +33,12 @@ class Window(QWidget, Ui_Window):
         self._filesCount = len(self._files)
         self._setupUI()
         self._connectSignalsSlots()
-        self.setWindowIcon(QtGui.QIcon("Bulkrr_Logo.jpg"))
+        try:
+            wd = sys._MEIPASS
+        except AttributeError:
+            wd = os.getcwd()
+        bulkrrLogoPath = os.path.join(wd, "Bulkrr_Logo.jpeg")
+        self.setWindowIcon(QtGui.QIcon(bulkrrLogoPath))
 
     def _setupUI(self):
         self.setupUi(self)
