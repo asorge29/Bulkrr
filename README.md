@@ -51,6 +51,8 @@ pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/path/to/cloned/rep
 
 Ensure to replace `"path/to/cloned/repo"` with the actual path to your cloned repository in the JSON configuration file or in the command above.
 
+Note: When building locally on MacOS, it is necessary to omit the splash screen and use the icon file ending in `.icns` rather than `.ico`
+
 By following these steps, you can build Bulkrr locally and customize it according to your preferences.
 
 
