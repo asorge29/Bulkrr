@@ -9,33 +9,71 @@ Bulkrr, where the 'r's stand for rapid and reliable, is an efficient tool design
 - **Bulk Renaming**: Queue up multiple files and rename them sequentially with Bulkrr's efficient bulk renaming feature.
 - **Preview Changes**: Preview the changes before applying them to ensure accuracy in renaming.
 - **Cross-Platform**: Bulkrr is designed to work seamlessly across different operating systems, ensuring flexibility in usage.
+- **Built in Python**: Bulkrr is built using Python, making it open-source and easily modifiable to suit specific needs.
+- **Open Source**: Bulkrr's source code is openly available, allowing users to modify and contribute to its development.
+- **Customizable Build**: Included with Bulkrr is the `auto-py-to-exe` configuration file (`auto-py-to-exe bulkrr_onefile.json`), enabling users to rebuild Bulkrr locally after making edits to the codebase.
+
 
 ## Getting Started
 
-To get started with Bulkrr, you can choose one of the following options:
+Bulkrr is a fully portable tool, requiring no installation or setup. It provides builds for Windows, Linux, and macOS platforms, ensuring compatibility across different operating systems.
 
-- **Download and Install MSI**: Download the MSI installer from the [Releases](https://github.com/BassMaster629/bulkrr/releases) page and follow the installation instructions to set up Bulkrr on your Windows system.
+### Using Pre-built Binaries
 
-- **Download Portable Version**: If you prefer a portable version, you can download the standalone executable from the [Releases](https://github.com/BassMaster629/bulkrr/releases) page. Simply unzip the downloaded file and run Bulkrr directly without installation.
+To get started quickly, download the appropriate binary for your operating system from the [Releases](https://github.com/asorge29/bulkrr/releases) page on GitHub. Once downloaded, simply unzip the file and run Bulkrr directly without any installation process.
+
+### Building from Source
+
+For advanced users or those who prefer to build from source, Bulkrr's codebase is available on GitHub. Follow these steps to build Bulkrr locally:
+
+1. **Clone the Repository**: Clone the Bulkrr repository to your local machine using Git.
+
+```bash
+git clone https://github.com/asorge29/bulkrr.git
+```
+
+2. **Install Dependencies**: Ensure you have Python installed on your system. Navigate to the cloned repository directory and install the required dependencies using pip.
+
+```bash
+pip install -r requirements.txt
+```
+
+
+3. **Build with PyInstaller**: Use PyInstaller to create a standalone executable for your platform. Run the following command:
+
+```bash
+pyinstaller --noconfirm --onefile --windowed --icon "C:/Users/path/to/cloned/repo/Bulkrr/bulkrr_logo_icon.ico" --splash "C:/Users/path/to/cloned/repo/Bulkrr/Bulkrr_Logo.jpeg" --add-data "C:/Users/path/to/cloned/repo/Bulkrr/Bulkrr_Logo.jpeg;."  "C:/Users/path/to/cloned/repo/Bulkrr/bulkrr.py"
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This command will generate the executable file in the `dist` directory.
+
+4. **Alternative: Auto Py to Exe**: Alternatively, if you prefer using Auto Py to Exe, you can utilize the provided configuration file (`auto-py-to-exe bulkrr_onefile.json`) to build Bulkrr. Simply open Auto Py to Exe, load the configuration file, and generate the executable.
+
+Ensure to replace `"path/to/cloned/repo"` with the actual path to your cloned repository in the JSON configuration file or in the command above.
+
+By following these steps, you can build Bulkrr locally and customize it according to your preferences.
+
 
 ## Usage
 
-1. **Load Files**: Add the files you want to rename to Bulkrr's file list. You can do this by dragging and dropping files into the Bulkrr window or by using the "Add Files" button.
+Using Bulkrr is simple and straightforward:
 
-2. **Preview Changes**: Preview the changes to ensure they meet your requirements. Bulkrr provides a preview of how the files will be renamed based on the defined pattern.
+1. **Load Files**: Add the files you want to rename to Bulkrr's file list. You can do this by dragging and dropping files into the Bulkrr window or by using the "Add Files" button. Additionally, you can load files from multiple source directories simultaneously, and they will remain in their original directories after renaming.
 
-3. **Apply Renaming**: Once satisfied with the preview, click the "Rename" button to apply the renaming pattern to the selected files.
+2. **Enter Name**: Enter the desired new name. A number will be added to the end of each file name automatically during renaming.
 
-4. **Complete**: Bulkrr completes the renaming process swiftly and reliably, leaving you with efficiently renamed files ready for use.
+3. **Hit Rename**: Once you've entered the desired name, simply click the "Rename" button to initiate the renaming process.
+
+Bulkrr also provides additional functionalities to manage your file queue efficiently:
+- **Edit Queue**: Use the "Edit" button to modify the file list before renaming, allowing you to remove individual files as needed.
+- **Clear Queue**: If you want to start fresh, use the "Clear Queue" button to remove all files from the queue.
+
+By following these steps and utilizing Bulkrr's features, you can efficiently rename multiple files with ease.
 
 ## Contribution
 
-Bulkrr is an open-source project developed following the Real Python tutorial. The codebase has been expanded beyond the tutorial, and further feature enhancements are planned. Contributions are welcome! Whether it's bug fixes, feature enhancements, or localization efforts, feel free to contribute by forking the repository and submitting a pull request.
+Bulkrr is an open-source project developed following the Real Python tutorial. The codebase has been expanded beyond the tutorial for my specific use case, and further feature enhancements are planned. Contributions are welcome! Whether it's bug fixes, feature enhancements, or localization efforts, feel free to contribute by forking the repository and submitting a pull request.
 
 ## License
 
 Bulkrr is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
-
----
-
-Experience the power of rapid and reliable bulk file renaming with Bulkrr! If you encounter any issues or have suggestions for improvement, don't hesitate to reach out. Your feedback is highly appreciated.
